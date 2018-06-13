@@ -34,11 +34,11 @@ gulp.task('styles', function() {
         'android 4'
       )
     )
-    .pipe(gulp.dest('dist/styles'))
+    .pipe(gulp.dest('build/styles'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(minifycss())
     .pipe(livereload(server))
-    .pipe(gulp.dest('dist/styles'))
+    .pipe(gulp.dest('build/styles'))
     .pipe(notify({ message: 'Styles task complete' }));
 });
 
@@ -49,7 +49,7 @@ gulp.task('html', function() {
     .pipe(
       htmlreplace({
         cssInline: {
-          src: gulp.src('dist/styles/main.min.css'),
+          src: gulp.src('build/styles/main.min.css'),
           tpl: '<style amp-custom>%s</style>',
         },
         ampBoilerplate:
@@ -58,6 +58,11 @@ gulp.task('html', function() {
     )
     .pipe(htmlmin({ collapseWhitespace: true }))
     .pipe(gulp.dest('dist'));
+});
+
+// Public
+gulp.task('public', function() {
+  return gulp.src('public/*').pipe(gulp.dest('dist'));
 });
 
 // Images
@@ -77,15 +82,15 @@ gulp.task('images', function() {
 // Clean
 gulp.task('clean', function() {
   return gulp
-    .src(['dist/styles', 'dist/images'], { read: false })
+    .src(['build/styles', 'dist/images'], { read: false })
     .pipe(clean());
 });
 
 // Default task
-gulp.task('default', sequence('clean', 'styles', 'images', 'html'));
+gulp.task('default', sequence('clean', 'styles', 'images', 'html', 'public'));
 
 // Watch
-gulp.task('watch', function() {
+gulp.task('watch', ['default'], function() {
   // Listen on port 35729
   server.listen(35729, function(err) {
     if (err) {

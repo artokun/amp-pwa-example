@@ -1,1 +1,40 @@
 @import './normalize';
+@import './header';
+
+body {
+  padding: 20px;
+}
+
+p {
+  line-height: 1.6;
+}
+
+.quote {
+  padding-left: 50px;
+
+  &__long {
+    padding-left: 100px;
+  }
+}
+
+.sup {
+  font-size: 0.5em;
+  color: black;
+  position: relative;
+  top: -10px;
+  margin-right: 3px;
+}
+
+.jesus {
+  color: red;
+}
+
+@media screen and (max-width: 767px) {
+  .quote {
+    padding-left: 25px;
+
+    &__long {
+      padding-left: 50px;
+    }
+  }
+}
