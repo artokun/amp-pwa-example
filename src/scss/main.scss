@@ -3,6 +3,11 @@
 
 body {
   padding: 20px;
+  background-color: #efefef;
+}
+
+h1 {
+  margin-bottom: 5px;
 }
 
 p {
@@ -18,7 +23,7 @@ p {
 }
 
 .sup {
-  font-size: 0.5em;
+  font-size: 0.1em;
   color: black;
   position: relative;
   top: -10px;
@@ -27,6 +32,10 @@ p {
 
 .jesus {
   color: red;
+}
+
+.bold {
+  font-weight: bold;
 }
 
 @media screen and (max-width: 767px) {

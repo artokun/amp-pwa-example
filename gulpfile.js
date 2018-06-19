@@ -10,7 +10,9 @@ const gulp = require('gulp'),
   cache = require('gulp-cache'),
   livereload = require('gulp-livereload'),
   htmlmin = require('gulp-htmlmin'),
-  htmlreplace = require('gulp-html-replace');
+  htmlreplace = require('gulp-html-replace'),
+  workboxBuild = require('workbox-build'),
+  pwaManifest = require('pwa-manifest');
 sequence = require('gulp-sequence');
 (lr = require('tiny-lr')), (server = lr());
 
@@ -75,7 +77,7 @@ gulp.task('images', function() {
       )
     )
     .pipe(livereload(server))
-    .pipe(gulp.dest('dist/images'))
+    .pipe(gulp.dest('dist/'))
     .pipe(notify({ message: 'Images task complete' }));
 });
 
@@ -86,8 +88,43 @@ gulp.task('clean', function() {
     .pipe(clean());
 });
 
+// Service Worker
+gulp.task('service-worker', () => {
+  return workboxBuild.generateSW({
+    globDirectory: 'src',
+    globPatterns: ['**/*.{html,json,js,css}'],
+    swDest: 'dist/sw.js',
+  });
+});
+
+// PWA Manifest
+gulp.task('manifest', function() {
+  pwaManifest({
+    name: 'Red Letter Gospel',
+    short_name: 'RLG',
+    start_url: '/',
+    display: 'standalone',
+    background_color: '#EFEFEF',
+    theme_color: '#FFFFFF',
+  }).then(function(manifest) {
+    // dump new generated manifest file if you want
+    pwaManifest.write('./dist', manifest);
+  });
+});
+
 // Default task
-gulp.task('default', sequence('clean', 'styles', 'images', 'html', 'public'));
+gulp.task(
+  'default',
+  sequence(
+    'clean',
+    'styles',
+    'images',
+    'html',
+    'public',
+    'manifest',
+    'service-worker'
+  )
+);
 
 // Watch
 gulp.task('watch', ['default'], function() {
